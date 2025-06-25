@@ -778,4 +778,4 @@ class ChartGenerator:
             
         except Exception as e:
             print(f"❌ Erro geral ao gerar gráficos: {e}")
-            return None
+            return None  ###
