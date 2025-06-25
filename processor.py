@@ -485,7 +485,7 @@ class ProcessadorUI:
             self.log(f"Arquivo selecionado: {os.path.basename(arquivo)}")
     
     def log(self, mensagem):
-        """Adiciona mensagem ao log de forma thread-safe"""
+      
         def _log():
             self.text_log.insert(tk.END, f"{mensagem}\n")
             self.text_log.see(tk.END)
@@ -507,7 +507,7 @@ class ProcessadorUI:
             self.root.after(0, _atualizar)
     
     def mostrar_erro(self, mensagem):
-        """Mostra erro de forma thread-safe"""
+       
         def _mostrar():
             messagebox.showerror("Erro", mensagem)
             self.finalizar_processamento()
@@ -543,19 +543,19 @@ class ProcessadorUI:
         self.label_status.config(text="Iniciando processamento...")
         self.log("=== INICIANDO PROCESSAMENTO ===")
         
-        # Executar processamento em thread separada
+        
         thread = threading.Thread(target=self.processar_arquivo_thread)
         thread.daemon = True
         thread.start()
     
     def processar_arquivo_thread(self):
-        """Executa o processamento em thread separada"""
+      
         try:
-            # Redirecionar prints para o log da interface
+            
             import sys
             from io import StringIO
             
-            # Capturar saída do console
+           
             old_stdout = sys.stdout
             sys.stdout = captured_output = StringIO()
             
@@ -565,11 +565,11 @@ class ProcessadorUI:
                     progress_callback=self.atualizar_progresso
                 )
                 
-                # Restaurar stdout e capturar mensagens
+               
                 sys.stdout = old_stdout
                 output_messages = captured_output.getvalue()
                 
-                # Adicionar mensagens ao log
+               
                 for linha in output_messages.strip().split('\n'):
                     if linha.strip():
                         self.log(linha)
@@ -584,18 +584,18 @@ class ProcessadorUI:
                     self.mostrar_erro(mensagem)
                     
             finally:
-                # Garantir que stdout seja restaurado
+                
                 sys.stdout = old_stdout
                 
         except Exception as e:
-            # CORREÇÃO: Usar a variável 'e' corretamente no lambda
+           
             mensagem_erro = f"Erro durante o processamento: {str(e)}"
             self.log(f"❌ {mensagem_erro}")
-            # Correção aplicada: capturar 'e' no escopo do lambda
+           
             self.root.after(0, lambda erro=e: self.mostrar_erro(str(erro)))
     
     def finalizar_processamento(self):
-        """Finaliza o processamento e reabilita a interface"""
+
         self.processando = False
         self.btn_processar.config(state="normal")
         self.progress_var.set(0)
